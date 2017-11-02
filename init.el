@@ -21,12 +21,12 @@
   (scroll-bar-mode -1))
 (add-to-list 'default-frame-alist '(height . 48))
 (add-to-list 'default-frame-alist '(width . 180))
-
 (setq visible-bell nil)
-
 (global-linum-mode t)
+(fset 'yes-or-no-p 'y-or-n-p)
+(global-set-key (kbd "<f5>") 'revert-buffer)
 
-; Open new files in same frame as previous
+                                        ; Open new files in same frame as previous
 (server-start)
 (setq-default ns-pop-up-frames nil)
 
@@ -60,9 +60,9 @@
 (require 'bind-key)
 
 ;; theme
-(use-package monokai-theme
-  :ensure monokai-theme
-  :config (load-theme 'monokai t))
+(use-package color-theme-sanityinc-tomorrow
+  :ensure color-theme-sanityinc-tomorrow
+  :config (load-theme 'sanityinc-tomorrow-night t))
 
 
 ;; try before you buy (or install a package)
@@ -224,7 +224,8 @@ Position the cursor at its beginning, according to the current mode."
 
 ;; Git
 (use-package magit
-  :ensure t)
+  :ensure t
+  :bind (("C-x g" . magit-status)))
 
 ;; Docker
 (use-package dockerfile-mode
