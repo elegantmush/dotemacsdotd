@@ -59,6 +59,10 @@
 (require 'diminish)
 (require 'bind-key)
 
+;; helper libraries
+(use-package dash)
+(use-package s)
+
 ;; theme
 (use-package color-theme-sanityinc-tomorrow
   :ensure color-theme-sanityinc-tomorrow
@@ -159,7 +163,6 @@ Position the cursor at its beginning, according to the current mode."
   nil)                                        ;
 
 ;; All Programming languages
-(use-package dash)
 (add-hook 'prog-mode-hook #'hs-minor-mode)
 (add-hook 'prog-mode-hook 'nlinum-mode)
 (add-hook 'prog-mode-hook 'column-number-mode)
@@ -194,7 +197,7 @@ Position the cursor at its beginning, according to the current mode."
   (add-hook 'clojure-mode-hook #'clj-refactor-mode))
 
 ;; Planck
-;(add-hook 'clojure-mode-hook #'inf-clojure-minor-mode)
+                                        ;(add-hook 'clojure-mode-hook #'inf-clojure-minor-mode)
 (add-hook 'clojure-mode-hook #'eldoc-mode)
 (add-hook 'inf-clojure-mode-hook #'eldoc-mode)
 (setq-default inf-clojure-program "planck")
@@ -235,42 +238,43 @@ Position the cursor at its beginning, according to the current mode."
 ;; refs:
 ;; http://jonathanchu.is/posts/org-mode-and-mobileorg-installation-and-config/
 ;; https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html
+;; org-directory is using default of 'org' which is a symlink to
+;; '~Library/Mobile Documents/com~apple~CloudDocs/org'
 (use-package org
+  :after (dash s)
   :bind (("C-c c" . org-capture)
          ("C-c l" . org-store-link)
          ("C-c a" . org-agenda))
   :config
   (setq org-log-done t)
   (add-hook 'org-mode-hook #'visual-line-mode)
-  (setq org-agenda-files (list "~/Dropbox/org/inbox.org"
-                               "~/Dropbox/org/work.org"
-                               "~/Dropbox/org/home.org"
-                               "~/Dropbox/org/tickler.org"))
+  (setq org-agenda-files '("inbox.org" "work.org" "home.org" "tickler.org"))
   (setq org-capture-templates '(("t" "Todo [inbox]" entry
-                                 (file+headline "~/Dropbox/org/inbox.org" "Tasks")
+                                 (file+headline "inbox.org" "Tasks")
                                  "* TODO %i%?")
                                 ("T" "Tickler" entry
-                                 (file+headline "~/Dropbox/org/tickler.org" "Tickler")
+                                 (file+headline "tickler.org" "Tickler")
                                  "* %i%? \n %U")))
-  (setq org-refile-targets '(("~/Dropbox/org/home.org" :maxlevel . 3)
-                             ("~/Dropbox/org/work.org" :maxlevel . 3)
-                             ("~/Dropbox/org/someday.org" :level . 1)
-                             ("~/Dropbox/org/tickler.org" :maxlevel . 2)))
-  (setq org-directory "~/Dropbox/org")
-  (setq org-mobile-inbox-for-pull "~/Dropbox/org/inbox.org")
-  (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
-  (setq org-mobile-files '("~/Dropbox/org"))
-  ;; Settings to export code with `minted' instead of `verbatim'.
-  (setq org-export-latex-listings t)
-  (setq org-latex-listings 'minted
-        org-latex-packages-alist '(("" "minted"))
-        org-latex-pdf-process
-        '("pdflatex -shell-escape -intera")))
+  (setq org-refile-targets '(("home.org" :maxlevel . 3)
+                             ("work.org" :maxlevel . 3)
+                             ("someday.org" :level . 1)
+                             ("tickler.org" :maxlevel . 2)))
+  (setq org-mobile-inbox-for-pull "inbox.org")
+  (setq org-mobile-directory "Apps/MobileOrg")
+  (setq org-mobile-files '("org")))
+
+;; Settings to export code with `minted' instead of `verbatim'.
+(setq org-export-latex-listings t)
+(setq org-latex-listings 'minted
+      org-latex-packages-alist '(("" "minted"))
+      org-latex-pdf-process
+      '("pdflatex -shell-escape -intera"))
 
 (use-package org-bullets
   :ensure t
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+
 
 
 (provide 'init)
