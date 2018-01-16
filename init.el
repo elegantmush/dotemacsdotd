@@ -26,13 +26,17 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 (global-set-key (kbd "<f5>") 'revert-buffer)
 
-                                        ; Open new files in same frame as previous
+; Open new files in same frame as previous
 (server-start)
 (setq-default ns-pop-up-frames nil)
 
 
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)
+
+;; corporate proxy: when set to 't' (i.e. true) it will use proxy 
+;; settings from a file in the '~/.emacs.d/includes' directory.
+(setq proxy nil)
 
 ;; add files from `includes` directory
 (add-to-list 'load-path "~/.emacs.d/includes/")
@@ -121,8 +125,8 @@ Position the cursor at its beginning, according to the current mode."
 
 
 ;; ENV variables
-(when (and (window-system) (memq window-system '(mac ns)))
-  (exec-path-from-shell-initialize))
+;(when (and (window-system) (memq window-system '(mac ns)))
+;  (exec-path-from-shell-initialize))
 
 ;; Recent Files
 (recentf-mode 1)
